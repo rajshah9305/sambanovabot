@@ -1,5 +1,0 @@
-- Frontend: React/Next.js with WebSocket for real-time communication
-- Backend: Node.js/Express with Socket.io
-- Database: MongoDB for session storage
-- AI: SambaNova API integration with Llama 4 Maverick
-- Deployment: Vercel

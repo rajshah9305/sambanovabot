@@ -1,20 +1,26 @@
-sambanova-chatbot/
-├── frontend/
-│   ├── package.json
-│   ├── next.config.js
-│   ├── pages/
-│   │   ├── _app.js
-│   │   └── index.js
-│   ├── components/
-│   │   ├── ChatWindow.js
-│   │   └── MessageInput.js
-│   └── styles/
-│       └── globals.css
-├── backend/
-│   ├── package.json
-│   ├── server.js
-│   ├── models/
-│   │   └── Message.js
-│   └── config/
-│       └── db.js
-└── README.md
+ai-agent-platform/
+├── package.json
+├── .env
+├── server.js
+├── config/
+│   └── db.js
+├── models/
+│   ├── Agent.js
+│   ├── Conversation.js
+│   └── KnowledgeBase.js
+├── controllers/
+│   ├── agentController.js
+│   ├── conversationController.js
+│   └── knowledgeBaseController.js
+├── routes/
+│   ├── agentRoutes.js
+│   ├── conversationRoutes.js
+│   └── knowledgeBaseRoutes.js
+├── services/
+│   ├── sambanovaService.js
+│   ├── memoryService.js
+│   ├── webSearchService.js
+│   └── followupService.js
+└── utils/
+    ├── errorHandler.js
+    └── logger.js
