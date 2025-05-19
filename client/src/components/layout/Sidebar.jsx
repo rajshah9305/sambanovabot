@@ -1,126 +1,170 @@
 import { NavLink } from 'react-router-dom';
-import { FiHome, FiUsers, FiMessageSquare, FiDatabase, FiSettings, FiX } from 'react-icons/fi';
+import {
+  FiHome,
+  FiUsers,
+  FiMessageSquare,
+  FiDatabase,
+  FiSettings,
+  FiX,
+  FiPlus,
+  FiZap,
+  FiBook,
+  FiHelpCircle
+} from 'react-icons/fi';
+import { useAuth } from '../../hooks/useAuth';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  return (
-    <>
-      {/* Mobile sidebar backdrop */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black bg-opacity-50 md:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
+  const { user } = useAuth();
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 z-30 flex-shrink-0 w-64 overflow-y-auto bg-white dark:bg-gray-800 md:static md:block transition-all duration-300 ease-in-out ${
-          isOpen ? 'left-0' : '-left-64 md:left-0'
-        }`}
-      >
-        <div className="py-4 text-gray-500 dark:text-gray-400">
-          {/* Sidebar header */}
-          <div className="flex items-center justify-between px-6 py-2 md:hidden">
-            <NavLink to="/" className="text-lg font-bold text-gray-800 dark:text-gray-200">
+  // Navigation items
+  const mainNavItems = [
+    { path: '/', icon: <FiHome className="w-5 h-5" />, label: 'Dashboard', exact: true },
+    { path: '/agents', icon: <FiUsers className="w-5 h-5" />, label: 'Agents' },
+    { path: '/conversations', icon: <FiMessageSquare className="w-5 h-5" />, label: 'Conversations' },
+    { path: '/knowledge-bases', icon: <FiDatabase className="w-5 h-5" />, label: 'Knowledge Bases' },
+  ];
+
+  const secondaryNavItems = [
+    { path: '/settings', icon: <FiSettings className="w-5 h-5" />, label: 'Settings' },
+    { path: '/documentation', icon: <FiBook className="w-5 h-5" />, label: 'Documentation' },
+    { path: '/help', icon: <FiHelpCircle className="w-5 h-5" />, label: 'Help & Support' },
+  ];
+
+  return (
+    <aside
+      className={`fixed inset-y-0 z-30 flex-shrink-0 w-64 overflow-y-auto bg-white dark:bg-neutral-800 border-r border-neutral-200 dark:border-neutral-700 md:static md:block transition-all duration-300 ease-in-out ${
+        isOpen ? 'left-0' : '-left-64 md:left-0'
+      }`}
+    >
+      <div className="flex flex-col h-full">
+        {/* Sidebar header - Mobile only */}
+        <div className="flex items-center justify-between p-4 md:hidden">
+          <NavLink to="/" className="flex items-center">
+            <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center text-white mr-2">
+              <span className="font-bold">S</span>
+            </div>
+            <span className="text-lg font-bold text-neutral-900 dark:text-white">
               SambaNova AI
-            </NavLink>
-            <button
-              className="p-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-              onClick={toggleSidebar}
-              aria-label="Close sidebar"
-            >
-              <FiX className="w-6 h-6" />
-            </button>
+            </span>
+          </NavLink>
+          <button
+            className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={toggleSidebar}
+            aria-label="Close sidebar"
+          >
+            <FiX className="w-5 h-5 text-neutral-700 dark:text-neutral-200" />
+          </button>
+        </div>
+
+        {/* Main navigation */}
+        <nav className="flex-1 px-3 py-4">
+          <div className="space-y-1">
+            {mainNavItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.exact}
+                className={({ isActive }) =>
+                  `flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group ${
+                    isActive
+                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300'
+                      : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700/50'
+                  }`
+                }
+              >
+                <span className={`mr-3 transition-colors duration-200 ${
+                  item.path === location.pathname
+                    ? 'text-primary-600 dark:text-primary-400'
+                    : 'text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200'
+                }`}>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
           </div>
 
-          {/* Sidebar links */}
-          <nav className="mt-6">
-            <div className="px-6 py-3">
+          {/* Quick actions */}
+          <div className="mt-6">
+            <div className="px-3 mb-2">
+              <h3 className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                Quick Actions
+              </h3>
+            </div>
+            <div className="space-y-1">
               <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 mt-2 text-sm font-medium transition-colors duration-150 rounded-lg ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-200'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`
-                }
-                end
+                to="/conversations/new"
+                className="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-all duration-200 group"
               >
-                <FiHome className="w-5 h-5 mr-3" />
-                <span>Dashboard</span>
+                <span className="mr-3 text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+                  <FiZap className="w-5 h-5" />
+                </span>
+                <span>New Conversation</span>
               </NavLink>
-
               <NavLink
-                to="/agents"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 mt-2 text-sm font-medium transition-colors duration-150 rounded-lg ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-200'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`
-                }
+                to="/agents/create"
+                className="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700/50 transition-all duration-200 group"
               >
-                <FiUsers className="w-5 h-5 mr-3" />
-                <span>Agents</span>
-              </NavLink>
-
-              <NavLink
-                to="/conversations"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 mt-2 text-sm font-medium transition-colors duration-150 rounded-lg ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-200'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`
-                }
-              >
-                <FiMessageSquare className="w-5 h-5 mr-3" />
-                <span>Conversations</span>
-              </NavLink>
-
-              <NavLink
-                to="/knowledge-bases"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 mt-2 text-sm font-medium transition-colors duration-150 rounded-lg ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-200'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`
-                }
-              >
-                <FiDatabase className="w-5 h-5 mr-3" />
-                <span>Knowledge Bases</span>
-              </NavLink>
-
-              <NavLink
-                to="/settings"
-                className={({ isActive }) =>
-                  `flex items-center px-4 py-2 mt-2 text-sm font-medium transition-colors duration-150 rounded-lg ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-200'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`
-                }
-              >
-                <FiSettings className="w-5 h-5 mr-3" />
-                <span>Settings</span>
+                <span className="mr-3 text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200">
+                  <FiPlus className="w-5 h-5" />
+                </span>
+                <span>Create Agent</span>
               </NavLink>
             </div>
-          </nav>
+          </div>
 
-          {/* Sidebar footer */}
-          <div className="px-6 my-6">
-            <NavLink
-              to="/agents/create"
-              className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-primary-600 border border-transparent rounded-lg active:bg-primary-700 hover:bg-primary-700 focus:outline-none focus:shadow-outline-purple"
-            >
-              Create New Agent
-            </NavLink>
+          {/* Secondary navigation */}
+          <div className="mt-6">
+            <div className="px-3 mb-2">
+              <h3 className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                Support
+              </h3>
+            </div>
+            <div className="space-y-1">
+              {secondaryNavItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group ${
+                      isActive
+                        ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100'
+                        : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700/50'
+                    }`
+                  }
+                >
+                  <span className={`mr-3 transition-colors duration-200 ${
+                    item.path === location.pathname
+                      ? 'text-neutral-700 dark:text-neutral-300'
+                      : 'text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200'
+                  }`}>
+                    {item.icon}
+                  </span>
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        {/* Sidebar footer */}
+        <div className="p-4 border-t border-neutral-200 dark:border-neutral-700">
+          <div className="flex items-center">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white shadow-sm">
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            <div className="ml-3 overflow-hidden">
+              <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">
+                {user?.name || 'User'}
+              </p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
+                {user?.email || 'user@example.com'}
+              </p>
+            </div>
           </div>
         </div>
-      </aside>
-    </>
+      </div>
+    </aside>
   );
 };
 

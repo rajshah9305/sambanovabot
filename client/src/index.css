@@ -3,102 +3,142 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+  html {
+    @apply scroll-smooth;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+  body {
+    @apply bg-white text-neutral-900 dark:bg-neutral-900 dark:text-white font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+
+  h4 {
+    @apply text-lg md:text-xl;
+  }
+
+  a {
+    @apply text-primary-600 dark:text-primary-400 hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 rounded;
+  }
+
+  button, [type='button'], [type='reset'], [type='submit'] {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900;
+  }
+
+  input, textarea, select {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400;
   }
 }
 
-@layer base {
-  * {
-    border-color: #e5e7eb;
+@layer components {
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-neutral-800 rounded-xl shadow-md overflow-hidden border border-neutral-200 dark:border-neutral-700 transition-all duration-200;
   }
-  body {
-    background-color: white;
-    color: #111827;
-    font-feature-settings: "rlig" 1, "calt" 1;
+
+  .card-hover {
+    @apply hover:shadow-lg hover:border-neutral-300 dark:hover:border-neutral-600 transform hover:-translate-y-1 transition-all duration-200;
   }
-  .dark * {
-    border-color: #374151;
+
+  /* Button styles */
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-all duration-200 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900;
   }
-  .dark body {
-    background-color: #111827;
-    color: #f9fafb;
+
+  .btn-secondary {
+    @apply bg-secondary-600 hover:bg-secondary-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-all duration-200 focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-900;
+  }
+
+  .btn-outline {
+    @apply border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 font-medium py-2 px-4 rounded-lg shadow-sm transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  /* Form styles */
+  .form-input {
+    @apply w-full px-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white transition-all duration-200;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1;
+  }
+
+  .form-error {
+    @apply mt-1 text-sm text-error-600 dark:text-error-400;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-300;
+  }
+
+  .badge-secondary {
+    @apply bg-secondary-100 text-secondary-800 dark:bg-secondary-900 dark:text-secondary-300;
+  }
+
+  .badge-success {
+    @apply bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300;
+  }
+
+  .badge-error {
+    @apply bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300;
+  }
+
+  .badge-warning {
+    @apply bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-300;
+  }
+
+  /* Message bubble styles */
+  .message-bubble-user {
+    @apply bg-primary-600 text-white rounded-2xl rounded-tr-none shadow-md;
+  }
+
+  .message-bubble-assistant {
+    @apply bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white rounded-2xl rounded-tl-none shadow-md border border-neutral-200 dark:border-neutral-700;
+  }
+
+  .message-bubble-system {
+    @apply bg-neutral-100 dark:bg-neutral-800/50 text-neutral-700 dark:text-neutral-300 rounded-xl border border-neutral-200 dark:border-neutral-700/50 shadow-sm;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f3f4f6;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background-color: #1f2937;
+  @apply bg-neutral-100 dark:bg-neutral-800 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 9999px;
+  @apply bg-neutral-300 dark:bg-neutral-600 rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-500 transition-colors duration-200;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background-color: #6b7280;
-}
-
-/* Chat message animations */
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -110,17 +150,43 @@
   }
 }
 
-.message-animation {
+.animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out forwards;
 }
 
 /* Typing indicator animation */
 .typing-indicator span {
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  background-color: #6b7280;
-  border-radius: 9999px;
+  @apply inline-block w-2 h-2 bg-neutral-400 dark:bg-neutral-500 rounded-full;
   animation: bounce 1.4s infinite ease-in-out both;
 }
 
@@ -139,4 +205,54 @@
   40% {
     transform: scale(1.0);
   }
+}
+
+/* Markdown content styling */
+.prose-chat {
+  @apply prose dark:prose-invert prose-sm md:prose-base max-w-none;
+}
+
+.prose-chat p {
+  @apply my-2;
+}
+
+.prose-chat pre {
+  @apply bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3 my-3 overflow-x-auto;
+}
+
+.prose-chat code {
+  @apply font-mono text-sm;
+}
+
+.prose-chat code:not(pre code) {
+  @apply bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm;
+}
+
+.prose-chat ul, .prose-chat ol {
+  @apply my-2 pl-6;
+}
+
+.prose-chat li {
+  @apply my-1;
+}
+
+.prose-chat blockquote {
+  @apply border-l-4 border-neutral-300 dark:border-neutral-700 pl-4 italic my-3;
+}
+
+/* Transitions */
+.transition-all {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.transition-transform {
+  @apply transition-transform duration-200 ease-in-out;
+}
+
+.transition-opacity {
+  @apply transition-opacity duration-200 ease-in-out;
+}
+
+.transition-colors {
+  @apply transition-colors duration-200 ease-in-out;
 }

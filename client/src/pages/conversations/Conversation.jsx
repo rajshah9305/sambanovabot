@@ -131,128 +131,145 @@ const Conversation = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm">
         <div className="flex items-center">
           <button
             onClick={() => navigate('/conversations')}
-            className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="mr-3 p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-300 transition-colors duration-200"
+            aria-label="Back to conversations"
           >
-            <FiArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <FiArrowLeft className="w-5 h-5" />
           </button>
-          
+
           {isEditing ? (
             <div className="flex items-center">
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="px-3 py-1 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                className="px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white transition-all duration-200"
                 autoFocus
                 onBlur={handleTitleUpdate}
                 onKeyDown={(e) => e.key === 'Enter' && handleTitleUpdate()}
               />
               <button
                 onClick={handleTitleUpdate}
-                className="ml-2 text-primary-600 dark:text-primary-400"
+                className="ml-2 px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors duration-200"
               >
                 Save
               </button>
             </div>
           ) : (
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-800 dark:text-white mr-2">
+              <h1 className="text-xl font-semibold text-neutral-900 dark:text-white mr-2 truncate max-w-[200px] md:max-w-md">
                 {title}
               </h1>
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="p-1.5 rounded-md text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:text-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200"
+                aria-label="Edit conversation title"
               >
                 <FiEdit2 className="w-4 h-4" />
               </button>
             </div>
           )}
         </div>
-        
+
         <button
           onClick={() => setIsDeleteModalOpen(true)}
-          className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
+          className="p-2 rounded-lg text-neutral-500 hover:text-error-600 hover:bg-error-50 dark:text-neutral-400 dark:hover:text-error-400 dark:hover:bg-error-900/20 transition-colors duration-200"
+          aria-label="Delete conversation"
         >
           <FiTrash2 className="w-5 h-5" />
         </button>
       </div>
 
       {/* Agent Info */}
-      <div className="bg-gray-50 dark:bg-gray-800 p-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-neutral-50 dark:bg-neutral-800/50 px-4 py-3 border-b border-neutral-200 dark:border-neutral-700">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-300 mr-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white shadow-sm mr-3">
             {agent.name?.charAt(0).toUpperCase() || 'A'}
           </div>
           <div>
-            <p className="font-medium text-gray-800 dark:text-white">{agent.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{agent.model}</p>
+            <p className="font-medium text-neutral-900 dark:text-white">{agent.name || 'AI Assistant'}</p>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 flex items-center">
+              <span className="inline-block w-2 h-2 rounded-full bg-success-500 mr-1.5"></span>
+              {agent.model || 'SambaNova Model'}
+            </p>
           </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message, index) => {
-          // Skip system messages that aren't meant to be displayed
-          if (message.role === 'system' && !message.content.includes('Web search results') && !message.content.includes('knowledge base')) {
-            return null;
-          }
-          
-          return (
-            <MessageBubble
-              key={index}
-              message={message}
-              isLastMessage={index === messages.length - 1}
-            />
-          );
-        })}
-        
-        {isAiResponding && (
-          <div className="flex items-start">
-            <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-300 mr-3">
-              {agent.name?.charAt(0).toUpperCase() || 'A'}
-            </div>
-            <div className="bg-white dark:bg-gray-700 rounded-lg p-3 max-w-[80%]">
-              <TypingIndicator />
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
+      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 bg-neutral-50 dark:bg-neutral-900/50">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {messages.map((message, index) => {
+            // Skip system messages that aren't meant to be displayed
+            if (message.role === 'system' && !message.content.includes('Web search results') && !message.content.includes('knowledge base')) {
+              return null;
+            }
+
+            return (
+              <MessageBubble
+                key={index}
+                message={message}
+                isLastMessage={index === messages.length - 1}
+              />
+            );
+          })}
+
+          {isAiResponding && <TypingIndicator />}
+
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Follow-up Suggestions */}
       {agent.enableFollowupQuestions && lastAiMessageWithMetadata?.metadata?.followupQuestions?.length > 0 && !isAiResponding && (
-        <FollowupSuggestions
-          suggestions={lastAiMessageWithMetadata.metadata.followupQuestions}
-          onSuggestionClick={handleFollowupClick}
-          selectedSuggestion={selectedFollowup}
-        />
+        <div className="border-t border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-4 py-3">
+          <div className="max-w-3xl mx-auto">
+            <FollowupSuggestions
+              suggestions={lastAiMessageWithMetadata.metadata.followupQuestions}
+              onSuggestionClick={handleFollowupClick}
+              selectedSuggestion={selectedFollowup}
+            />
+          </div>
+        </div>
       )}
 
       {/* Message Input */}
-      <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-        <form onSubmit={handleSendMessage} className="flex items-center space-x-2">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
-            disabled={isAiResponding}
-          />
-          <button
-            type="submit"
-            className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!newMessage.trim() || isAiResponding}
-          >
-            {isAiResponding ? <FiLoader className="w-5 h-5 animate-spin" /> : <FiSend className="w-5 h-5" />}
-          </button>
-        </form>
+      <div className="border-t border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 p-4 shadow-md">
+        <div className="max-w-3xl mx-auto">
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Type your message..."
+                className="w-full px-4 py-3 pr-12 border border-neutral-300 dark:border-neutral-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm transition-all duration-200"
+                disabled={isAiResponding}
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 text-neutral-500 hover:text-primary-600 dark:text-neutral-400 dark:hover:text-primary-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+                disabled={!newMessage.trim() || isAiResponding}
+              >
+                {isAiResponding ? (
+                  <FiLoader className="w-5 h-5 animate-spin" />
+                ) : (
+                  <FiSend className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+          </form>
+          <div className="mt-2 text-xs text-neutral-500 dark:text-neutral-400 text-center">
+            <span className="inline-flex items-center">
+              <span className="inline-block w-2 h-2 rounded-full bg-success-500 mr-1.5"></span>
+              Powered by SambaNova AI
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}

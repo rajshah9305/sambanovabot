@@ -1,4 +1,4 @@
-import { FiMessageSquare } from 'react-icons/fi';
+import { FiMessageSquare, FiCornerDownRight } from 'react-icons/fi';
 
 const FollowupSuggestions = ({ suggestions, onSuggestionClick, selectedSuggestion }) => {
   if (!suggestions || suggestions.length === 0) {
@@ -6,11 +6,13 @@ const FollowupSuggestions = ({ suggestions, onSuggestionClick, selectedSuggestio
   }
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800">
-      <div className="flex items-center mb-2">
-        <FiMessageSquare className="w-4 h-4 text-gray-600 dark:text-gray-400 mr-2" />
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Follow-up Questions
+    <div className="animate-fade-in">
+      <div className="flex items-center mb-3">
+        <div className="flex items-center justify-center w-5 h-5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 mr-2">
+          <FiCornerDownRight className="w-3 h-3" />
+        </div>
+        <h3 className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+          Suggested follow-up questions
         </h3>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -18,10 +20,10 @@ const FollowupSuggestions = ({ suggestions, onSuggestionClick, selectedSuggestio
           <button
             key={index}
             onClick={() => onSuggestionClick(suggestion)}
-            className={`px-3 py-1.5 text-sm rounded-full border transition-colors ${
+            className={`px-3 py-2 text-sm rounded-lg border transition-all duration-200 ${
               selectedSuggestion === suggestion
-                ? 'bg-primary-100 border-primary-300 text-primary-800 dark:bg-primary-900/30 dark:border-primary-700 dark:text-primary-300'
-                : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-600'
+                ? 'bg-primary-50 border-primary-200 text-primary-700 dark:bg-primary-900/30 dark:border-primary-700/50 dark:text-primary-300 shadow-sm'
+                : 'bg-white border-neutral-200 text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:border-neutral-600'
             }`}
           >
             {suggestion}

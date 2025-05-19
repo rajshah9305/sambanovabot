@@ -1,122 +1,157 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { FiExternalLink, FiInfo } from 'react-icons/fi';
+import { FiExternalLink, FiInfo, FiCpu, FiThermometer, FiHash } from 'react-icons/fi';
 import WebSearchResults from './WebSearchResults';
 import KnowledgeBaseReferences from './KnowledgeBaseReferences';
 
 const MessageBubble = ({ message, isLastMessage }) => {
   const [showMetadata, setShowMetadata] = useState(false);
-  
+
   // Format timestamp
-  const formattedTime = message.timestamp 
+  const formattedTime = message.timestamp
     ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : '';
-  
+
   // Determine if message has web search results
   const hasWebSearch = message.metadata?.webSearch?.used && message.metadata?.webSearch?.results?.length > 0;
-  
+
   // Determine if message has knowledge base references
   const hasKnowledgeBase = message.metadata?.knowledgeBase?.used && message.metadata?.knowledgeBase?.documents?.length > 0;
-  
-  // Determine message type and styling
+
+  // Determine message type
   const isUser = message.role === 'user';
   const isSystem = message.role === 'system';
   const isAssistant = message.role === 'assistant';
-  
-  // Special handling for system messages that contain web search or knowledge base info
+
+  // Special handling for system messages
   const isWebSearchSystem = isSystem && message.content.includes('Web search results');
   const isKnowledgeBaseSystem = isSystem && message.content.includes('knowledge base');
-  
-  // Apply different styling based on message type
-  const bubbleClasses = isUser
-    ? 'bg-primary-600 text-white rounded-lg rounded-tr-none ml-auto'
-    : isSystem && (isWebSearchSystem || isKnowledgeBaseSystem)
-    ? 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-200 dark:border-gray-700'
-    : isAssistant
-    ? 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg rounded-tl-none border border-gray-200 dark:border-gray-600'
-    : 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300 rounded-lg border border-yellow-200 dark:border-yellow-800/30';
+
+  // Get avatar letter
+  const getAvatarLetter = () => {
+    if (isUser) {
+      return message.user?.name?.charAt(0).toUpperCase() || 'U';
+    } else if (isAssistant) {
+      return 'A';
+    } else {
+      return 'S';
+    }
+  };
 
   return (
-    <div className={`flex items-start ${isUser ? 'justify-end' : 'justify-start'} message-animation`}>
-      {!isUser && !isSystem && (
-        <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-300 mr-3 flex-shrink-0">
-          A
+    <div className={`group flex items-start gap-3 py-2 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+      {/* Avatar for assistant or system */}
+      {!isUser && (
+        <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm ${
+          isAssistant
+            ? 'bg-gradient-to-br from-primary-500 to-secondary-500 text-white'
+            : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300'
+        }`}>
+          {getAvatarLetter()}
         </div>
       )}
-      
-      <div className={`p-3 max-w-[80%] ${bubbleClasses}`}>
+
+      {/* Message bubble */}
+      <div className={`relative px-4 py-3 max-w-[85%] md:max-w-[75%] shadow-sm ${
+        isUser
+          ? 'message-bubble-user animate-slide-in-right'
+          : isSystem
+            ? 'message-bubble-system animate-slide-in-left'
+            : 'message-bubble-assistant animate-slide-in-left'
+      }`}>
         {/* Message content with markdown rendering */}
-        <div className="prose dark:prose-invert prose-sm max-w-none">
+        <div className="prose-chat">
           <ReactMarkdown
             components={{
               a: ({ node, ...props }) => (
-                <a 
-                  {...props} 
-                  target="_blank" 
+                <a
+                  {...props}
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
+                  className="text-primary-600 dark:text-primary-400 hover:underline inline-flex items-center"
                 >
                   {props.children}
                   <FiExternalLink className="inline ml-1 w-3 h-3" />
                 </a>
               ),
               pre: ({ node, ...props }) => (
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-1 my-2 overflow-x-auto">
+                <div className="bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3 my-3 overflow-x-auto">
                   <pre {...props} />
                 </div>
               ),
               code: ({ node, inline, ...props }) => (
-                inline 
-                  ? <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm" {...props} />
-                  : <code {...props} />
+                inline
+                  ? <code className="bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
+                  : <code className="font-mono" {...props} />
               )
             }}
           >
             {message.content}
           </ReactMarkdown>
         </div>
-        
+
         {/* Web search results */}
         {hasWebSearch && showMetadata && (
-          <WebSearchResults results={message.metadata.webSearch.results} />
+          <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700 animate-fade-in">
+            <WebSearchResults results={message.metadata.webSearch.results} />
+          </div>
         )}
-        
+
         {/* Knowledge base references */}
         {hasKnowledgeBase && showMetadata && (
-          <KnowledgeBaseReferences documents={message.metadata.knowledgeBase.documents} />
+          <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700 animate-fade-in">
+            <KnowledgeBaseReferences documents={message.metadata.knowledgeBase.documents} />
+          </div>
         )}
-        
+
         {/* Message metadata and timestamp */}
         <div className="flex justify-between items-center mt-2 text-xs">
           <div>
             {(hasWebSearch || hasKnowledgeBase) && (
               <button
                 onClick={() => setShowMetadata(!showMetadata)}
-                className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                className="flex items-center px-2 py-1 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors duration-200"
               >
                 <FiInfo className="w-3 h-3 mr-1" />
                 {showMetadata ? 'Hide sources' : 'Show sources'}
               </button>
             )}
           </div>
-          <span className="text-gray-500 dark:text-gray-400">{formattedTime}</span>
+          <span className="text-neutral-500 dark:text-neutral-400">{formattedTime}</span>
         </div>
-        
+
         {/* Model info for the last AI message */}
         {isLastMessage && isAssistant && message.metadata?.modelInfo && (
-          <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600 text-xs text-gray-500 dark:text-gray-400">
-            <p>
-              Model: {message.metadata.modelInfo.model} • 
-              Temp: {message.metadata.modelInfo.temperature} • 
-              Tokens: {message.metadata.modelInfo.tokenUsage?.total || 0}
-            </p>
+          <div className="mt-3 pt-2 border-t border-neutral-200 dark:border-neutral-700 text-xs text-neutral-500 dark:text-neutral-400">
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center">
+                <FiCpu className="w-3 h-3 mr-1" />
+                <span>{message.metadata.modelInfo.model}</span>
+              </div>
+              <div className="flex items-center">
+                <FiThermometer className="w-3 h-3 mr-1" />
+                <span>Temp: {message.metadata.modelInfo.temperature}</span>
+              </div>
+              <div className="flex items-center">
+                <FiHash className="w-3 h-3 mr-1" />
+                <span>Tokens: {message.metadata.modelInfo.tokenUsage?.total || 0}</span>
+              </div>
+            </div>
           </div>
         )}
+
+        {/* Message pointer */}
+        <div className={`absolute top-3 ${isUser ? 'right-[-6px]' : isAssistant ? 'left-[-6px]' : 'hidden'} w-3 h-3 transform rotate-45 ${
+          isUser
+            ? 'bg-primary-600'
+            : 'bg-white dark:bg-neutral-800 border-l border-t border-neutral-200 dark:border-neutral-700'
+        }`}></div>
       </div>
-      
+
+      {/* Avatar for user */}
       {isUser && (
-        <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white ml-3 flex-shrink-0">
-          U
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+          {getAvatarLetter()}
         </div>
       )}
     </div>
