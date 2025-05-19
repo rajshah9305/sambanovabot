@@ -2,6 +2,8 @@
 
 A Node.js-based platform for creating and managing AI agents powered by SambaNova's language models. This platform allows users to create custom AI agents with different capabilities, manage conversations, and integrate with knowledge bases.
 
+![SambaNova Chatbot Platform](https://github.com/rajshah9305/sambanovabot/assets/readme-assets/platform-screenshot.png)
+
 ## Features
 
 - **AI Agent Management**: Create, configure, and manage AI agents with different models, parameters, and capabilities
@@ -10,14 +12,30 @@ A Node.js-based platform for creating and managing AI agents powered by SambaNov
 - **Web Search Integration**: Enable agents to search the web for up-to-date information
 - **Follow-up Questions**: Automatically generate relevant follow-up questions to continue conversations
 - **User Authentication**: Secure user authentication and authorization system
+- **NSFW Content Handling**: Configure agents to allow or block NSFW content
+- **Memory Persistence**: Agents can remember previous conversations for context
+- **Modern UI**: Responsive design with dark/light mode support
 
 ## Tech Stack
 
-- **Backend**: Node.js, Express.js
+### Backend
+
+- **Framework**: Node.js, Express.js
 - **Database**: MongoDB with Mongoose ODM
 - **AI Integration**: SambaNova API for language models and embeddings
 - **Authentication**: JWT-based authentication
 - **Logging**: Winston logger
+- **Rate Limiting**: Express rate limiter for API protection
+
+### Frontend
+
+- **Framework**: React.js with Vite
+- **Styling**: Tailwind CSS with DaisyUI components
+- **State Management**: React Context API
+- **Routing**: React Router v7
+- **Form Handling**: React Hook Form with Yup validation
+- **HTTP Client**: Axios
+- **Real-time Updates**: Socket.io
 
 ## Getting Started
 
@@ -32,29 +50,56 @@ A Node.js-based platform for creating and managing AI agents powered by SambaNov
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/ai-agent-platform.git
-   cd ai-agent-platform
+   git clone https://github.com/rajshah9305/sambanovabot.git
+   cd sambanovabot
    ```
 
-2. Install dependencies:
+2. Install backend dependencies:
 
    ```bash
    npm install
    ```
 
-3. Create a `.env` file based on the `.env.example` template:
+3. Install frontend dependencies:
+
+   ```bash
+   cd client
+   npm install
+   cd ..
+   ```
+
+4. Create a `.env` file based on the `.env.example` template:
 
    ```bash
    cp .env.example .env
    ```
 
-4. Update the `.env` file with your configuration values.
+5. Update the `.env` file with your configuration values, including:
+   - MongoDB connection string
+   - SambaNova API key
+   - JWT secret
+   - Search API credentials
 
-5. Start the development server:
+6. Start the MongoDB server:
+
+   ```bash
+   mongod --dbpath ~/data/db
+   ```
+
+7. Start the backend development server:
 
    ```bash
    npm run dev
    ```
+
+8. In a separate terminal, start the frontend development server:
+
+   ```bash
+   cd client
+   npm run dev
+   ```
+
+9. Access the application at `http://localhost:5173` (or the port shown in your terminal)
 
 ## API Endpoints
 
